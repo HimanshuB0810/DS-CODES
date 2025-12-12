@@ -71,6 +71,7 @@ void peek()
     }
 }
 
+
 int main()
 {
     enqueue(10);

@@ -6,7 +6,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include<ctype.h> // to lower()
+#include<ctype.h> 
 
 #define ALPHABET 26
 
@@ -28,41 +28,139 @@ struct TrieNode* getNode()
 
 void insert(struct TrieNode *root, char *word)
 {
-    struct TrieNode *crwal = root; // temporary pointer used to move down the trie as we insert each character
+    struct TrieNode *temp = root; 
     int index;
     for(int i=0;word[i]!='\0';i++)
     {
         char letter= tolower(word[i]);
         index= letter- 'a'; 
-        // Example:
-        // 'a' - 'a' → 0
-        // 'c' - 'a' → 2
-        // This maps characters 'a'-'z' to integer indices 0-25
+        
 
-        if(index<0 || index>=ALPHABET) continue; // check for non-alphabetic characters
-        if(crwal->children[index]==NULL)
+        if(index<0 || index>=ALPHABET) continue; 
+        if(temp->children[index]==NULL)
         {
-            crwal->children[index]=getNode();
+            temp->children[index]=getNode();
         }
-        crwal=crwal->children[index];
+        temp=temp->children[index];
     }
-    crwal->isEndOfWord=1;
+    temp->isEndOfWord=1;
 }   
 
 int search(struct TrieNode *root, char *word)
 {
-    struct TrieNode *crawl= root;
+    struct TrieNode *temp= root;
     int index;
     for(int i=0;word[i]!='\0';i++)
     {
         char letter=tolower(word[i]);
         index=letter-'a';
-        if(index<0 || index>=ALPHABET) continue; // check for non-alphabetic characters
-        if(crawl->children[index]==NULL)
+        if(index<0 || index>=ALPHABET) continue; 
+        if(temp->children[index]==NULL)
         {
             return 0;
         }
-        crawl=crawl->children[index];
+        temp=temp->children[index];
     }
-    return crawl->isEndOfWord;
+    return temp->isEndOfWord;
 }
+
+void part1(struct TrieNode *root)
+{
+    FILE *fp=fopen("textfile.txt","r");
+    char word[50];
+    if(!fp)
+    {
+        printf("File not found!\n");
+        return;
+    }
+    while(fscanf(fp,"%s",word)!=EOF)
+    {
+        insert(root,word);
+    }
+    fclose(fp);
+
+    char key[50];
+    printf("Enter word to search: ");
+    scanf("%s",key);
+
+    if(search(root,key))
+    {
+        printf("%s Found in Trie\n",key);
+    }
+    else
+    {
+        printf("%s Not Found\n");
+    }
+}
+
+void part2(struct TrieNode *root) 
+{
+    char *keys[] = {"and","bat","ball","book","cot","cotton","internet","interview","joy","job","King","Lion","man","mango","manage"};
+    int n = 15;
+
+    for(int i=0; i<n; i++)
+    {
+        insert(root,keys[i]);
+    }
+
+    char key[50];
+    printf("Enter word to search: ");
+    scanf("%s",key);
+    if(search(root,key))
+    {
+        printf("%s Found in Trie\n",key);
+    }
+    else
+    {
+        printf("%s Not Found\n");
+    }
+}
+
+void part3(struct TrieNode *root) 
+{
+    char *keys[] = {"and","bat","ball","book","cot","cotton","internet","interview","joy","job","King","Lion","man","mango","manage"};
+    int n = 15;
+
+    for(int i=0; i<n; i++)
+    {
+        insert(root,keys[i]);
+    }
+    FILE *fp=fopen("textfile.txt","r");
+    char word[50];
+    if(!fp)
+    {
+        printf("File not found!\n");
+        return;
+    }
+
+    while (fscanf(fp,"%s",word)!=EOF)
+    {
+        if(search(root,word))
+        {
+            printf("%s Found",word);
+        }
+        else
+        {
+            printf("%s Not Found",word);
+        }
+    }
+}
+
+int main()
+{
+    struct TrieNode* root=getNode();
+    int choice;
+    printf("1. File -> Trie -> Search User Input\n");
+    printf("2. Array -> Trie -> Search User Input\n");
+    printf("3. Array -> Trie -> Search File Input\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+        switch (choice) {
+        case 1: part1(root); break;
+        case 2: part2(root); break;
+        case 3: part3(root); break;
+        default: printf("Invalid choice\n");
+    }
+    return 0;
+}
+

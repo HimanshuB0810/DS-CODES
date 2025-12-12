@@ -1,4 +1,4 @@
-// Program based on hashing
+// 5. Program based on hashing
 
 #include<stdio.h>
 #include<stdlib.h>

@@ -1,5 +1,5 @@
-// Program based on singly linked list:
-// 2. Maintain a record of coffee shop database implement
+// 3. Program based on singly linked list:
+//  Maintain a record of coffee shop database implement
 // following:
 // i. Display the total sale of a day
 // ii. Maximum and minimum bill of a day
